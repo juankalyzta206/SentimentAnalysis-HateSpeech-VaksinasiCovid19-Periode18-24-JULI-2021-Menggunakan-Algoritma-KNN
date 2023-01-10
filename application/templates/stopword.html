@@ -1,0 +1,188 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="jumbotron shadow">
+	<div class="row">
+		<div class="col-md-12 col-sm-12">
+			<div class="bs-callout bs-callout-primary mt-0">
+				<div class="d-inline-flex">
+					<h4>Data <em>Stop Word</em></h4>
+					<button class="btn btn-outline-light btn-sm mx-2" type="button" data-toggle="modal" data-target="#modalDeleteAll"> <i class="fa fa-trash"></i></button>
+					
+					<!-- Modal Hapus Semua Data -->
+					<div class="modal fade" tabindex="-1" id="modalDeleteAll" >
+						<div class="modal-dialog">
+							<div class="modal-content">
+								<div class="modal-header">
+									<h5 class="modal-title"><i class="fa fa-trash mx-3"></i>Hapus Semua Data</h5>
+									<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+									<span aria-hidden="true">&times;</span>
+									</button>
+								</div>
+								<div class="modal-body text-center text-muted">
+									<p class="my-2">Apakah Anda yakin ingin menghapus seluruh data <em>stop word</em>?</p>
+								</div>
+								<div class="modal-footer">
+									<button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+									<form action="/stopword/hapus-all" method="POST">
+										<button type="submit" class="btn btn-danger">Hapus</button>
+									</form>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<p class="text-muted">Daftar <em>stop words</em> (kata umum yang dianggap kurang memiliki makna) dari <em>database</em></p>
+			</div>
+
+			{% with messages = get_flashed_messages(category_filter=["success"]) %}
+				{% if messages %}
+					{% for message in messages %}
+						<div class="alert alert-success alert-dismissible fade show" role="alert">
+							{{ message }}
+							<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
+					{% endfor %}
+				{% endif %}
+			{% endwith %}
+			{% with messages = get_flashed_messages(category_filter=["error"]) %}
+				{% if messages %}
+					{% for message in messages %}
+						<div class="alert alert-danger alert-dismissible fade show" role="alert">
+							{{ message }}
+							<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
+					{% endfor %}
+				{% endif %}
+			{% endwith %}
+
+			<div class="col-md-12 text-center mb-3">
+				<button type="button" class="btn btn-success w-25 mx-1" data-toggle="modal" data-target="#stopwordTambahModal"><i class="fa fa-plus"></i> Tambah Data</button>
+				<em>atau</em>
+				<button type="button" class="btn btn-success w-25 mx-1" data-toggle="modal" data-target="#stopwordImportModal"><i class="fa fa-plus"></i> Import Data</button>
+				
+				<!-- Modal Tambah -->
+				<div class="modal fade" tabindex="-1" id="stopwordTambahModal" >
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h5 class="modal-title">Tambah Data</h5>
+								<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+								</button>
+							</div>
+							<form action="/stopword" method="POST">
+								<div class="modal-body">
+									<div class="form-group px-4 text-left">
+										<label><em>Stop word</em></label>
+										<input type="text" name="stopword" placeholder="Misal: yang" class="form-control" required />
+									</div>
+								</div>
+								<div class="modal-footer">
+									<button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+									<button type="submit" class="btn btn-primary">Tambah</button>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+				<!-- Modal Import -->
+				<div class="modal fade" id="stopwordImportModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+					<div class="modal-dialog">
+						<div class="modal-content text-left">
+							<div class="modal-header">
+								<h5 class="modal-title" id="exampleModalLabel">Import Data <em>(Excel)</em></h5>
+								<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+									<span aria-hidden="true">&times;</span>
+								</button>
+							</div>
+							<form action="/importStopword" method="POST" enctype="multipart/form-data">
+								<div class="modal-body px-5">
+									<label>File <em>Excel</em> <small>(.xls atau .xlsx)</small></label>
+									<div class="custom-file">
+										<input type="file" name="excel_file" class="custom-file-input" id="customFile" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" required>
+										<label class="custom-file-label" for="customFile">Pilih File Excel</label>
+									</div>
+									<!-- <small class="text-secondary"><i class="fa fa-info-circle"></i> Format file <em>excel</em> dapat diunduh <a href="#">di sini</a></small> -->
+								</div>
+								<div class="modal-footer">
+									<button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+									<button type="submit" class="btn btn-primary"><em>Import</em></button>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<div class="table-responsive-sm">
+				<table class="table table-bordered table-striped text-center w-100" id="table_dataStopword">
+					<thead class="w-100">
+						<tr>
+							<th>No.</th>
+							<th><em>Stop Word</em></th>
+							<th>Aksi</th>
+						</tr>
+					</thead>
+				</table>
+			</div>
+
+			<!-- Modal Edit -->
+			<div class="modal fade" tabindex="-1" id="stopwordEditModal" >
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title"><i class="fa fa-pencil mx-3"></i>Ubah Data</h5>
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
+						<form action="/stopword/ubah" method="POST">
+							<div class="modal-body text-muted">
+								<div class="form-group px-4 text-left">
+									<label><em>Stop word</em></label>
+									<input type="text" name="stopword" class="form-control" required />
+								</div>
+								<input type="hidden" name="id" required readonly />
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+								<button type="submit" class="btn btn-primary">Ubah</button>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+
+			<!-- Modal Hapus -->
+			<div class="modal fade" tabindex="-1" id="stopwordDeleteModal" >
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title"><i class="fa fa-trash mx-3"></i>Hapus Data</h5>
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
+						<div class="modal-body text-center text-muted">
+							<p class="my-2">Apakah Anda yakin ingin menghapus data nomor <strong class="text-dark"></strong>?</p>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+							<form action="/stopword/hapus" method="POST">
+								<input type="hidden" name="id" required readonly />
+								<button type="submit" class="btn btn-primary">Hapus</button>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}

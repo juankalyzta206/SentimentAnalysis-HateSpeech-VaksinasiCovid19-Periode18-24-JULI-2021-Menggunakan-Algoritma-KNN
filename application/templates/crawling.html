@@ -1,0 +1,150 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="jumbotron">
+	<div class="row">
+		<div class="col-md-12 col-sm-12" id="content_crawling">
+			<div class="bs-callout bs-callout-primary mt-0">
+				<div class="d-inline-flex">
+					<h4>Data <em>Crawling</em></h4>
+					<button class="btn btn-outline-light btn-sm mx-2" type="button" data-toggle="modal" data-target="#modalDeleteAll"> <i class="fa fa-trash"></i></button>
+					
+					<!-- Modal Hapus Semua Data -->
+					<div class="modal fade" tabindex="-1" id="modalDeleteAll" >
+						<div class="modal-dialog">
+							<div class="modal-content">
+								<div class="modal-header">
+									<h5 class="modal-title"><i class="fa fa-trash mx-3"></i>Hapus Semua Data</h5>
+									<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+									<span aria-hidden="true">&times;</span>
+									</button>
+								</div>
+								<div class="modal-body text-center text-muted">
+									<p class="my-2">Apakah Anda yakin ingin menghapus seluruh data <em>crawling</em>?</p>
+								</div>
+								<div class="modal-footer">
+									<button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+									<form action="/crawling/hapus-all" method="POST">
+										<button type="submit" class="btn btn-danger">Hapus</button>
+									</form>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<p class="text-muted">Pengumpulan data bersumber pada media sosial Twitter</p>
+			</div>
+
+			{% with messages = get_flashed_messages() %}
+				{% if messages %}
+					{% for message in messages %}
+						<div class="alert alert-danger alert-dismissible fade show" role="alert">
+							{{ message }}
+							<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
+					{% endfor %}
+				{% endif %}
+			{% endwith %}
+
+			<div class="col-md-12 text-center mb-3">
+				<button type="button" class="btn btn-success w-25 mx-1" data-toggle="modal" data-target="#modalCrawling"><i class="fa fa-twitter"></i> <em>Crawling</em> Data</button>
+				<em>atau</em>
+				<button type="button" class="btn btn-success w-25 mx-1" data-toggle="modal" data-target="#modalImport"><i class="fa fa-plus"></i> <em>Import</em> Data</button>
+			</div>
+	
+			<!-- Modal Crawling -->
+			<div class="modal fade" id="modalCrawling" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title" id="exampleModalLabel"><em>Crawling</em> Data <em>(Online)</em></h5>
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
+						<form>
+							<div class="modal-body px-5">
+								<div class="form-group">
+									<label>Kata Kunci Pencarian</label>
+									<input type="text" name="kata_kunci" id="kata_kunci" class="form-control" placeholder="Gunakan tanda '#' (Contoh : #covid19)" required />
+									<small class="text-info ml-1 d-none fadeIn" id="validasi_kata_kunci">
+										<i class="fa fa-info-circle"></i> Kolom 'Kata Kunci Pencarian' harus diisi
+									</small>
+								</div>
+								<div class="form-group">
+									<label>Tanggal Awal <em>Tweet</em></label>
+									<input type="date" name="tanggal_awal" id="tanggal_awal" class="form-control" required />
+									<small class="text-info ml-1 d-none fadeIn" id="validasi_tanggal_awal">
+										<i class="fa fa-info-circle"></i> Kolom 'Tanggal Awal <em>Tweet</em>' harus diisi
+									</small>
+								</div>
+								<div class="form-group">
+									<label>Tanggal Akhir <em>Tweet</em></label>
+									<input type="date" name="tanggal_akhir" id="tanggal_akhir" class="form-control" required />
+									<small class="text-info ml-1 ml-2 d-none fadeIn" id="validasi_tanggal_akhir">
+										<i class="fa fa-info-circle"></i> Kolom 'Tanggal Akhir <em>Tweet</em>' harus diisi
+									</small>
+									<small class="text-info ml-1 d-none fadeIn" id="validasi_tanggal_akhir_2">
+										<i class="fa fa-info-circle"></i> 'Tanggal Akhir' harus lebih lampau dari 'Tanggal Awal'
+									</small>
+								</div>
+								<input type="hidden" name="aksi" value="crawling" required readonly />
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+								<button type="button" id="crawling_data" class="btn btn-primary">Mulai</button>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+			<!-- Modal Import -->
+			<div class="modal fade" id="modalImport" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title" id="exampleModalLabel"><em>Import</em> Data <em>(Excel)</em></h5>
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
+						<form action="/importCrawling" method="POST" enctype="multipart/form-data">
+							<div class="modal-body px-5">
+								<label>File <em>Excel</em> <small>(.xls atau .xlsx)</small></label>
+								<div class="custom-file">
+									<input type="file" name="excel_file" class="custom-file-input" id="customFile" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" required>
+									<label class="custom-file-label" for="customFile">Pilih File Excel</label>
+								</div>
+								<!-- <small class="text-secondary"><i class="fa fa-info-circle"></i> Format file <em>excel</em> dapat diunduh <a href="#">di sini</a></small> -->
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+								<button type="submit" class="btn btn-primary"><em>Import</em></button>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+			
+			<div class="table-responsive-sm">
+				<table class="table table-bordered table-striped text-center w-100" id="table_dataCrawling">
+					<thead class="w-100">
+						<tr>
+							<th width="5%">No.</th>
+							<th width="15%">ID</th>
+							<th width="50%" class="text-center">Teks</th>
+							<th width="15%">Pengguna</th>
+							<th width="15%">Dibuat pada</th>
+							<!--
+							<th>Aksi</th>
+							-->
+						</tr>
+					</thead>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}

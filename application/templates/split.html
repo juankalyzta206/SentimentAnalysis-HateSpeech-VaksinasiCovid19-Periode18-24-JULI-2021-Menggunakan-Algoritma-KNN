@@ -1,0 +1,160 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="jumbotron">
+	<div class="row">
+		<div class="col-md-12 col-sm-12">
+			<div class="bs-callout bs-callout-primary mt-0">
+				<div class="d-inline-flex">
+					<h4>Pembagian Data</h4>
+					<button class="btn btn-outline-light btn-sm mx-2" type="button" data-toggle="modal" data-target="#modalDeleteAll"> <i class="fa fa-trash"></i></button>
+					
+					<!-- Modal Hapus Semua Data -->
+					<div class="modal fade" tabindex="-1" id="modalDeleteAll" >
+						<div class="modal-dialog">
+							<div class="modal-content">
+								<div class="modal-header">
+									<h5 class="modal-title"><i class="fa fa-trash mx-3"></i>Hapus Semua Data</h5>
+									<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+									<span aria-hidden="true">&times;</span>
+									</button>
+								</div>
+								<div class="modal-body text-center text-muted">
+									<p class="my-2">Apakah Anda yakin ingin menghapus<br />seluruh data uji dan data latih?</p>
+								</div>
+								<div class="modal-footer">
+									<button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+									<form action="/split/hapus-all" method="POST">
+										<button type="submit" class="btn btn-danger">Hapus</button>
+									</form>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<p class="text-muted">Membagi data ber<em>label</em> menjadi Data Uji dan Data Latih</p>
+			</div>
+			<div id="content_split">
+				<div class="col-md-6 offset-md-3 col-sm-12 text-center mb-3">
+					<button type="button" class="btn btn-success w-75" data-toggle="modal" data-target="#modalSplit"><i class="fa fa-columns"></i> <em>Split</em> Data</button>
+				</div>
+		
+				<!-- Modal Split -->
+				<div class="modal fade" id="modalSplit" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h5 class="modal-title" id="exampleModalLabel"><em>Split</em> Data</h5>
+								<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+								</button>
+							</div>
+							<form>
+								<div class="modal-body text-center px-5">
+									<label class="text-muted d-inline-flex align-items-center mb-0">Sebanyak <h4 class="text-info mx-2 mb-0" id="jumlah_dataWithLabel">{{ count_data_with_label }}</h4> data ber<em>label</em>&nbsp;akan dibagi</label>
+									<br />
+									<small class="text-info d-none fadeIn" id="validasi_split">
+										<i class="fa fa-info-circle"></i> Silakan lakukan proses '<em>Labeling</em>' terlebih dahulu
+									</small>
+									<div class="container-fuild text-left mt-3">
+										<label class="text-muted">Pilih rasio pembagian data (Data Uji : Data Latih):</label>
+										<br />
+										<small class="text-info d-none fadeIn" id="validasi_rasio">
+											<i class="fa fa-info-circle"></i> Pilih rasio pembagian data(di bawah) terlebih dahulu
+										</small>
+										<div class="custom-control custom-radio custom-control">
+											<input type="radio" id="rasio-satu" name="rasio" value="1:9" class="custom-control-input" onclick="cariRasio(this.value)" required />
+											<label class="custom-control-label mr-3" for="rasio-satu">
+												1 : 9
+												<span class="text-muted ml-3" id="rasio-satu-hasil"></span>
+											</label>
+										</div>
+										<!-- <div class="custom-control custom-radio custom-control">
+											<input type="radio" id="rasio-satu" name="rasio" value="2:8" class="custom-control-input" onclick="cariRasio(this.value)" required />
+											<label class="custom-control-label mr-3" for="rasio-satu">
+												2 : 8
+												<span class="text-muted ml-3" id="rasio-satu-hasil"></span>
+											</label>
+										</div> -->
+									</div>
+								</div>
+								<div class="modal-footer">
+									<input type="hidden" name="jumlah_data" value="{{ count_data_with_label }}" required readonly />
+									<button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+									<button type="button" id="split_data" class="btn btn-primary">Mulai</button>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+				
+				<ul class="nav nav-pills mb-3 mt-4 d-flex justify-content-center align-content-center text-center" id="pills-tab" role="tablist">
+					<li class="nav-item w-25 mx-1 border border-primary rounded" role="presentation">
+						<a class="nav-link active" data-toggle="pill" href="#tab-data-latih" role="tab" aria-controls="tab-data-latih" aria-selected="true">Data Latih</a>
+					</li>
+					<li class="nav-item w-25 mx-1 border border-primary rounded" role="presentation">
+						<a class="nav-link" data-toggle="pill" href="#tab-data-tes" role="tab" aria-controls="tab-data-tes" aria-selected="false">Data Uji</a>
+					</li>
+				</ul>
+				<div class="tab-content" id="pills-tabContent">
+					<div class="tab-pane fade show active" id="tab-data-latih" role="tabpanel" aria-labelledby="tab-data-latih">
+						<div class="table-responsive-sm">
+							<table class="table table-bordered table-striped text-center w-100" id="table_dataTraining">
+								<thead class="w-100">
+									<tr>
+										<th width="5%">No.</th>
+										<th width="15%">ID</th>
+										<th width="35%" class="text-center">Teks Bersih</th>
+										<th width="15%">Pengguna</th>
+										<th width="15%">Dibuat pada</th>
+										<th width="15%"><em>Label</em></th>
+									</tr>
+								</thead>
+							</table>
+						</div>
+					</div>
+					<div class="tab-pane fade" id="tab-data-tes" role="tabpanel" aria-labelledby="tab-data-tes">
+						<div class="tab-pane fade show active" id="tab-data-latih" role="tabpanel" aria-labelledby="tab-data-latih">
+							<div class="table-responsive-sm">
+								<table class="table table-bordered table-striped text-center w-100" id="table_dataTesting">
+									<thead class="w-100">
+										<tr>
+											<th width="5%">No.</th>
+											<th width="15%">ID</th>
+											<th width="35%" class="text-center">Teks Bersih</th>
+											<th width="15%">Pengguna</th>
+											<th width="15%">Dibuat pada</th>
+											<th width="15%"><em>Label</em></th>
+										</tr>
+									</thead>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+				<!-- Modal Detail Lihat Tweet Asli -->
+				<div class="modal fade" id="modalLihatTweetAsli" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+					<div class="modal-dialog modal-dialog-centered" role="document">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h5 class="modal-title" id="exampleModalLabel">Detail Tweet</h5>
+								<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+									<span aria-hidden="true">&times;</span>
+								</button>
+							</div>
+							<div class="modal-body mx-3">
+								<h6 class="mb-2">Tweet Asli:</h6>
+								<p class="text-muted" id="tweetAsli"></p>
+								<hr />
+								<h6 class="mb-2">Tweet Bersih:</h6>
+								<p class="text-muted" id="tweetBersih"></p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}

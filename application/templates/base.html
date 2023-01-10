@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>Analisis Sentimen Vaksinasi</title>
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		
+		<!-- CSS -->
+		<link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" type="text/css" rel="stylesheet"/>
+		<link href="{{ url_for('static', filename='css/font-awesome.min.css') }}" type="text/css" rel="stylesheet"/>
+		<link href="{{ url_for('static', filename='css/style.css') }}" type="text/css" rel="stylesheet"/>
+	</head>
+	<body>
+		<div class="header">
+			<a href="#" id="menu-action">
+				<i class="fa fa-bars"></i>
+				<span>Tutup</span>
+			</a>
+			<div class="logo d-flex justify-content-between">
+				<div>KKP - Text Mining - Analisis Sentimen</div>
+				<div class="mr-3">
+					{% if session['fullname'] %}
+						<div class="dropdown">
+							<div class="dropdown-toggle btn text-white" id="dropdownMenu" data-toggle="dropdown"></div>
+							<div class="dropdown-menu text" aria-labelledby="dropdownMenu">
+								<div class="dropdown-item py-0 disabled text-dark">
+									<small>
+										<i class="fa fa-user-circle fa-lg mr-2"></i> {{ session['fullname'] }}
+									</small>
+								</div>
+								<a class="dropdown-item py-0" href="/logout">
+									<small>
+										<i class="fa fa-power-off fa-lg mr-2"></i> Keluar
+									</small>
+								</a>
+							</div>
+						</div>
+					{% else %}
+						<!-- AUTH GUARD -->
+						<script>
+							window.location.replace('/login');
+						</script>
+					{% endif %}
+				</div>
+			</div>
+		</div>
+		<div class="sidebar">
+			<ul>
+				<li><a href="/dashboard" class="text-decoration-none"><i class="fa fa-desktop"></i>Beranda</a></li>
+				<li>
+					<a href="#subMenuListGroup" class="text-decoration-none" data-toggle="collapse" aria-expanded="false"><i class="fa fa-plus-circle"></i> Kamus Kata<i class="fa fa-caret-down ml-4 pl-4"></i></a>
+					<ul class="collapse ml-3" id="subMenuListGroup">
+						<li class="ml-3 border-left"><a href="/slangword" class="text-decoration-none"><i class="fa fa-language"></i><em>Slang Words</em></a></li>
+						<li class="ml-3 border-left"><a href="/stopword" class="text-decoration-none"><i class="fa fa-language"></i><em>Stop Words</em></a></li>
+					</ul>
+				</li>
+				<li><a href="/crawling" class="text-decoration-none"><i class="fa fa-twitter"></i><em>Crawling</em></a></li>
+				<li><a href="/preprocessing" class="text-decoration-none"><i class="fa fa-cog"></i><em>Preprocessing</em></a></li>
+				<li><a href="/labeling" class="text-decoration-none"><i class="fa fa-tags"></i>Pelabelan</a></li>
+				<li><a href="/split" class="text-decoration-none"><i class="fa fa-columns"></i>Pembagian Data</a></li>
+				<li><a href="/modeling" class="text-decoration-none"><i class="fa fa-cogs"></i>Pemodelan</a></li>
+				<li><a href="/evaluation" class="text-decoration-none"><i class="fa fa-list-ul"></i>Pengujian</a></li>
+			</ul>
+		</div>
+			
+		<!-- Content -->
+		<main class="main">
+			{% block content %}{% endblock %}
+		</main>
+
+		<!-- JS -->
+		<script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+		<script src="{{ url_for('static', filename='js/popper.min.js') }}"></script>
+		<script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+		<script src="{{ url_for('static', filename='js/jquery.dataTables.min.js') }}"></script>
+		<script src="{{ url_for('static', filename='js/dataTables.bootstrap4.min.js') }}"></script>
+		<script src="{{ url_for('static', filename='js/moment-with-locales.js') }}"></script>
+		<script src="{{ url_for('static', filename='js/custom.js') }}"></script>
+		<script src="{{ url_for('static', filename='js/ajax.js') }}"></script>
+	</body>
+</html>

@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="jumbotron">
+	<div class="row">
+		<div class="col-md-12 col-sm-12">
+			<div class="bs-callout bs-callout-primary mt-0">
+				<h4>Pengujian Data</h4>
+				<p class="text-muted">Menguji <em>Model</em> latih menggunakan Data Uji</p>
+			</div>
+			<div id="content_pengujian">
+				<div class="col-md-6 offset-md-3 col-sm-12 text-center mb-3">
+					<button type="button" class="btn btn-success w-75" data-toggle="modal" data-target="#modalUji"><i class="fa fa-list-ul"></i> Uji Data</button>
+				</div>
+
+				<!-- Modal -->
+				<div class="modal fade" id="modalUji" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h5 class="modal-title" id="exampleModalLabel">Pengujian</h5>
+								<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+								</button>
+							</div>
+							<form>
+								<div class="modal-body px-5 py-3">
+									<label class="text-muted mb-0 text-justify">Pengujian terhadap <em>model</em> latih menggunakan algoritme <span class="h6"><em>K-Nearest Neighbor</em> (KNN)</span>, dilakukan dengan menggunakan <span class="h6" id="jumlah_dataTes">{{ count_data_testing }}</span> Data Uji.</label>
+									<br />
+									<div class="container-fuild text-left mt-3">
+										<div class="form-group">
+											<label class="text-muted">Data Uji</label>
+											<input class="form-control" value="{{ count_data_testing }} Data Uji" readonly />
+											<small class="text-info ml-1 d-none fadeIn" id="validasi_uji">
+												<i class="fa fa-info-circle"></i> Silakan lakukan proses 'Pembagian Data' terlebih dahulu
+											</small>
+										</div>
+										<label class="text-muted">Nilai K untuk Ketetanggaan Terdekat</label>
+										<select class="custom-select" name="nilai_k">
+											<option value="" selected disabled>Pilih Nilai K</option>
+											<option value="3">3 Ketetanggaan Terdekat</option>
+											<option value="5">5 Ketetanggaan Terdekat</option>
+											<option value="7">7 Ketetanggaan Terdekat</option>
+											<option value="9">9 Ketetanggaan Terdekat</option>
+											<option value="11">11 Ketetanggaan Terdekat</option>
+										</select>
+										<small class="text-info ml-1 d-none fadeIn" id="validasi_nilai_k">
+											<i class="fa fa-info-circle"></i> Pilih salah satu nilai K terlebih dahulu
+										</small>
+										<small class="text-info ml-1 d-none fadeIn" id="validasi_nilai_k_2">
+											<i class="fa fa-info-circle"></i> Nilai K tidak boleh melebihi jumlah data pada <em>model</em> latih
+										</small>
+										<br/>
+										<label class="text-muted mt-2">Nama <em>Model</em></label>
+										<select class="custom-select" name="model_name" id="model-evaluasi">
+											<option value="" selected disabled>Pilih Model Latih</option>
+											{% for data in data_model %}
+												<option value="{{ data.model_name }}">{{ data.model_name }}</option>
+											{% endfor %}
+										</select>
+										<small class="text-info ml-1 d-none fadeIn" id="validasi_model_uji">
+											<i class="fa fa-info-circle"></i> Pilih <em>Model</em> latih untuk digunakan terlebih dahulu
+										</small>
+										<label class="text-muted mt-2" id="komposisi-model"></label>
+									</div>
+								</div>
+								<div class="modal-footer">
+									<button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+									<button type="button" id="uji_data" class="btn btn-primary">Mulai</button>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>Text Mining - Analisis Sentimen</title>
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		
+		<!-- CSS -->
+		<link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" type="text/css" rel="stylesheet"/>
+		<link href="{{ url_for('static', filename='css/font-awesome.min.css') }}" type="text/css" rel="stylesheet"/>
+	</head>
+	<body class="bg-light">
+		<div class="row mt-5 w-100">
+			<div class="col-md-4 offset-md-4">
+				<div class="card shadow border-info round">
+					<div class="card-body p-4">
+						<div class="text-center py-2">
+							<i class="fa fa-user-circle fa-4x text-info"></i>
+						</div>
+						
+						<form method="POST" action="/register">
+							<h4 class="text-center">Daftar</h4>
+							<hr class="mt-3 mb-3 w-75" />
+
+							{% with messages = get_flashed_messages(category_filter=["success"]) %}
+								{% if messages %}
+									{% for message in messages %}
+										<div class="alert alert-success alert-dismissible fade show" role="alert">
+											{{ message }}
+											<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+											<span aria-hidden="true">&times;</span>
+											</button>
+										</div>
+									{% endfor %}
+								{% endif %}
+							{% endwith %}
+							{% with messages = get_flashed_messages(category_filter=["error"]) %}
+								{% if messages %}
+									{% for message in messages %}
+										<div class="alert alert-danger alert-dismissible fade show" role="alert">
+											{{ message }}
+											<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+											<span aria-hidden="true">&times;</span>
+											</button>
+										</div>
+									{% endfor %}
+								{% endif %}
+							{% endwith %}
+
+							<label for="Username" class="text-muted mb-1"><em>Username</em></label>
+							<div class="input-group mb-2 mr-sm-2">
+								<div class="input-group-prepend">
+									<div class="input-group-text bg-white"><i class="fa fa-user text-info"></i></div>
+								</div>
+								<input type="text" name="username" maxlength="15" class="form-control" id="Username" placeholder="Username" required />
+							</div>
+							<label for="NamaLengkap" class="text-muted mb-1"><em>Nama Lengkap</em></label>
+							<div class="input-group mb-2 mr-sm-2">
+								<div class="input-group-prepend">
+									<div class="input-group-text bg-white"><i class="fa fa-address-card text-info"></i></div>
+								</div>
+								<input type="text" name="fullname" maxlength="35" class="form-control" id="NamaLengkap" placeholder="Nama Lengkap" required />
+							</div>
+							<label for="Password" class="text-muted mb-1">Kata Sandi</label>
+							<div class="input-group mb-2 mr-sm-2">
+								<div class="input-group-prepend">
+									<div class="input-group-text bg-white"><i class="fa fa-key text-info"></i></div>
+								</div>
+								<input type="password" name="kata_sandi" maxlength="32" class="form-control" id="Password" placeholder="Kata Sandi" required />
+							</div>
+							<div class="text-center mt-4">
+								<button type="submit" class="btn btn-info w-100">Daftar</button>
+							</div>
+						</form>
+					</div>
+				</div>
+				<div class="text-center my-3">
+					<a href="/login" class="text-secondary text-decoration-none">Masuk</a>
+				</div>
+			</div>
+		</div>
+
+		<!-- JS -->
+		<script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+		<script src="{{ url_for('static', filename='js/popper.min.js') }}"></script>
+		<script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+	</body>
+</html>

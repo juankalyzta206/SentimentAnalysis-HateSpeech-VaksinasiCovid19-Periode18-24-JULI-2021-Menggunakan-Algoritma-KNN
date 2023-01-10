@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="jumbotron text-center">
+	<div class="container w-75 text-center">
+		<h4>Analisis Sentimen <i>Hatespeech</i> Terhadap Vaksinasi COVID-19 pada Media Sosial Twitter Menggunakan Algoritme <em>K-Nearest Neighbor</em></h4>
+	</div>
+	<hr>
+	<br />
+	<div class="row">
+		<div class="col-md-4 mb-4">
+			<div class="card">
+				<div class="card-header">
+					<a href="/crawling" class="text-decoration-none text-dark">
+						Jumlah data <em>Crawling</em> <i class="fa fa-twitter"></i>
+					</a>
+				</div>
+				<div class="card-body align-items-center text-muted ">
+					<h4 class="mb-0 text-dark">{{ data.data_crawling }}</h4>
+					<p>Data <em>Crawling</em></p>
+					<a href="/crawling" class="btn btn-info btn-sm">Lihat Detail <i class="fa fa-search"></i></a>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-4 mb-4">
+			<div class="card">
+				<div class="card-header">
+					<a href="/preprocessing" class="text-decoration-none text-dark">
+						Jumlah data <em>Preprocessing</em> <i class="fa fa-cog"></i>
+					</a>
+				</div>
+				<div class="card-body align-items-center text-muted ">
+					<h4 class="mb-0 text-dark">{{ data.data_preprocessing }}</h4>
+					<p>Data <em>Preprocessing</em></p>
+					<a href="/preprocessing" class="btn btn-info btn-sm">Lihat Detail <i class="fa fa-search"></i></a>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-4 mb-4">
+			<div class="card">
+				<div class="card-header">
+					<a href="/labeling" class="text-decoration-none text-dark">
+						Jumlah data ber<em>label</em> <i class="fa fa-tags"></i>
+					</a>
+				</div>
+				<div class="card-body align-items-center text-muted ">
+					<h4 class="mb-0 text-dark">{{ data.data_berlabel }}</h4>
+					<p>Data ber<em>label</em></p>
+					<a href="/labeling" class="btn btn-info btn-sm">Lihat Detail <i class="fa fa-search"></i></a>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-4 mb-4">
+			<div class="card">
+				<div class="card-header">
+					<a href="/labeling" class="text-decoration-none text-dark">
+						Jumlah data Latih
+					</a>
+				</div>
+				<div class="card-body align-items-center text-muted ">
+					<h4 class="mb-0 text-dark">{{ data.data_latih }}</h4>
+					<p>Data Latih</p>
+					<a href="/labeling" class="btn btn-info btn-sm">Lihat Detail <i class="fa fa-search"></i></a>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-4 mb-4">
+			<div class="card">
+				<div class="card-header">
+					<a href="/split" class="text-decoration-none text-dark">
+						Jumlah data Uji
+					</a>
+				</div>
+				<div class="card-body align-items-center text-muted ">
+					<h4 class="mb-0 text-dark">{{ data.data_tes }}</h4>
+					<p>Data Uji</p>
+					<a href="/split" class="btn btn-info btn-sm">Lihat Detail <i class="fa fa-search"></i></a>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-4 mb-4">
+			<div class="card border-0">
+				<div class="card-body align-items-center text-muted mt-2">
+					<a href="/modeling" class="btn btn-info btn-sm w-75 mb-3">Buat sebuah <em>model</em> <i class="fa fa-cogs"></i></a>
+					<a href="/evaluation" class="btn btn-info btn-sm w-75 mb-3">Lakukan Pengujian <i class="fa fa-list-ul"></i></a>
+				</div>
+			</div>
+		</div>
+		
+	</div>
+</div>
+{% endblock %}
